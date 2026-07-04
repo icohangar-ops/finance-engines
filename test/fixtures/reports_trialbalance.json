@@ -1,0 +1,61 @@
+{
+  "Reports": [
+    {
+      "ReportName": "TrialBalance",
+      "ReportDate": "30 June 2026",
+      "Rows": [
+        {
+          "RowType": "Section",
+          "Title": "Revenue",
+          "Rows": [
+            {"RowType": "Row", "Cells": [{"Value": "Product Sales (400)"}, {"Value": "0.00"}, {"Value": "2850000.00"}]},
+            {"RowType": "Row", "Cells": [{"Value": "Tolling Revenue (410)"}, {"Value": "0.00"}, {"Value": "620000.00"}]}
+          ]
+        },
+        {
+          "RowType": "Section",
+          "Title": "Expenses",
+          "Rows": [
+            {"RowType": "Row", "Cells": [{"Value": "Feedstock Purchases (500)"}, {"Value": "1240000.00"}, {"Value": "0.00"}]},
+            {"RowType": "Row", "Cells": [{"Value": "Plant Payroll (510)"}, {"Value": "890000.00"}, {"Value": "0.00"}]},
+            {"RowType": "Row", "Cells": [{"Value": "Waste Disposal Services (520)"}, {"Value": "187000.00"}, {"Value": "0.00"}]},
+            {"RowType": "Row", "Cells": [{"Value": "Utilities (530)"}, {"Value": "310000.00"}, {"Value": "0.00"}]},
+            {"RowType": "Row", "Cells": [{"Value": "Depreciation Expense (560)"}, {"Value": "420000.00"}, {"Value": "0.00"}]},
+            {"RowType": "Row", "Cells": [{"Value": "Interest Expense (570)"}, {"Value": "365000.00"}, {"Value": "0.00"}]},
+            {"RowType": "Row", "Cells": [{"Value": "G&A (580)"}, {"Value": "255000.00"}, {"Value": "0.00"}]}
+          ]
+        },
+        {
+          "RowType": "Section",
+          "Title": "Assets",
+          "Rows": [
+            {"RowType": "Row", "Cells": [{"Value": "Business Bank Checking (090)"}, {"Value": "742000.00"}, {"Value": "0.00"}]},
+            {"RowType": "Row", "Cells": [{"Value": "Accounts Receivable (610)"}, {"Value": "486000.00"}, {"Value": "0.00"}]},
+            {"RowType": "Row", "Cells": [{"Value": "Inventory - Finished Goods (630)"}, {"Value": "512000.00"}, {"Value": "0.00"}]},
+            {"RowType": "Row", "Cells": [{"Value": "Prepaid Insurance (640)"}, {"Value": "58000.00"}, {"Value": "0.00"}]},
+            {"RowType": "Row", "Cells": [{"Value": "Plant & Equipment (710)"}, {"Value": "9800000.00"}, {"Value": "0.00"}]},
+            {"RowType": "Row", "Cells": [{"Value": "Accumulated Depreciation (711)"}, {"Value": "0.00"}, {"Value": "1260000.00"}]}
+          ]
+        },
+        {
+          "RowType": "Section",
+          "Title": "Liabilities",
+          "Rows": [
+            {"RowType": "Row", "Cells": [{"Value": "Accounts Payable (800)"}, {"Value": "0.00"}, {"Value": "618000.00"}]},
+            {"RowType": "Row", "Cells": [{"Value": "Accrued Expenses (805)"}, {"Value": "0.00"}, {"Value": "142000.00"}]},
+            {"RowType": "Row", "Cells": [{"Value": "Current Portion of Term Loan (820)"}, {"Value": "0.00"}, {"Value": "480000.00"}]},
+            {"RowType": "Row", "Cells": [{"Value": "Term Loan (900)"}, {"Value": "0.00"}, {"Value": "5320000.00"}]}
+          ]
+        },
+        {
+          "RowType": "Section",
+          "Title": "Equity",
+          "Rows": [
+            {"RowType": "Row", "Cells": [{"Value": "Owner Capital Contributions (970)"}, {"Value": "0.00"}, {"Value": "3600000.00"}]},
+            {"RowType": "Row", "Cells": [{"Value": "Retained Earnings (960)"}, {"Value": "0.00"}, {"Value": "418000.00"}]}
+          ]
+        }
+      ]
+    }
+  ]
+}
