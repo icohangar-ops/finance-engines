@@ -144,7 +144,12 @@ export function parseXeroTrialBalance(
         target === "assets" || target === "expenses"
           ? debit - credit
           : credit - debit;
-      if (name) sections[target][name] = balance;
+      // Accumulate rather than assign: a section can legitimately carry the same
+      // account name on more than one row (tracking-category breakdowns, or two
+      // accounts sharing a name under different codes). Overwriting silently
+      // discarded the earlier balance, understating the section — which in a
+      // covenant certificate can flip a breach into apparent compliance.
+      if (name) sections[target][name] = (sections[target][name] ?? 0) + balance;
     }
   }
   return sections;
@@ -173,7 +178,10 @@ export function trialBalanceFromRecords(
       rec.section === "assets" || rec.section === "expenses"
         ? debit - credit
         : credit - debit;
-    sections[rec.section][rec.account] = balance;
+    // Accumulate, for the same reason as parseXeroTrialBalance: repeated account
+    // names must sum, not replace, or balances are silently lost.
+    sections[rec.section][rec.account] =
+      (sections[rec.section][rec.account] ?? 0) + balance;
   }
   return sections;
 }

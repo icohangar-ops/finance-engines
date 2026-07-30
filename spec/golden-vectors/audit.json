@@ -1,0 +1,442 @@
+{
+  "spec": "Invoice audit rules (auditengine/rules.py <-> src/audit/rules.ts)",
+  "note": "`today` is injected via config so overdue checks are reproducible. Findings are compared as an order-insensitive multiset: neither engine promises an emission order, so requiring one would make the suite brittle for no gain.",
+  "config": {
+    "entry_lag_days": 14,
+    "overdue_days": 10,
+    "amount_outlier_multiple": 3,
+    "rate_change_pct": 5,
+    "min_invoices_for_baseline": 3,
+    "today": "2026-03-01"
+  },
+  "invoices": [
+    {
+      "id": 1,
+      "invoice_number": "INV-1001",
+      "supplier_id": 10,
+      "supplier_name": "Acme Metals",
+      "issue_date": "2026-01-05",
+      "create_date": "2026-01-06",
+      "required_date": "2026-01-20",
+      "sum": 12500,
+      "net_sum": 12500,
+      "sum_paid": 12500,
+      "status": 3,
+      "currency": "USD"
+    },
+    {
+      "id": 2,
+      "invoice_number": "#inv1001",
+      "supplier_id": 10,
+      "supplier_name": "Acme Metals",
+      "issue_date": "2026-01-05",
+      "create_date": "2026-01-07",
+      "required_date": "2026-01-20",
+      "sum": 12500,
+      "net_sum": 12500,
+      "sum_paid": 0,
+      "status": 1,
+      "currency": "USD"
+    },
+    {
+      "id": 3,
+      "invoice_number": "INV-1002",
+      "supplier_id": 10,
+      "supplier_name": "Acme Metals",
+      "issue_date": "2026-01-01",
+      "create_date": "2026-02-10",
+      "required_date": "2026-02-01",
+      "sum": 4000,
+      "net_sum": 4000,
+      "sum_paid": 4000,
+      "status": 3,
+      "currency": "USD"
+    },
+    {
+      "id": 4,
+      "invoice_number": "INV-1003",
+      "supplier_id": 20,
+      "supplier_name": "Borax Ltd",
+      "issue_date": "2026-01-10",
+      "create_date": "2026-01-11",
+      "required_date": "2026-02-01",
+      "sum": 8800,
+      "net_sum": 8800,
+      "sum_paid": 0,
+      "status": 2,
+      "currency": "USD"
+    },
+    {
+      "id": 10,
+      "invoice_number": "INV-1004",
+      "supplier_id": 20,
+      "supplier_name": "Borax Ltd",
+      "issue_date": "2025-11-01",
+      "create_date": "2025-11-02",
+      "required_date": "2025-11-15",
+      "sum": 5000,
+      "net_sum": 5000,
+      "sum_paid": 1500,
+      "status": 4,
+      "currency": "USD"
+    },
+    {
+      "id": 5,
+      "invoice_number": "INV-2001",
+      "supplier_id": 30,
+      "supplier_name": "Cobalt Co",
+      "issue_date": "2026-01-02",
+      "create_date": "2026-01-03",
+      "required_date": "2026-01-20",
+      "sum": 1000,
+      "net_sum": 1000,
+      "sum_paid": 1000,
+      "status": 3,
+      "currency": "USD"
+    },
+    {
+      "id": 6,
+      "invoice_number": "INV-2002",
+      "supplier_id": 30,
+      "supplier_name": "Cobalt Co",
+      "issue_date": "2026-01-09",
+      "create_date": "2026-01-10",
+      "required_date": "2026-01-27",
+      "sum": 1100,
+      "net_sum": 1100,
+      "sum_paid": 1100,
+      "status": 3,
+      "currency": "USD"
+    },
+    {
+      "id": 7,
+      "invoice_number": "INV-2003",
+      "supplier_id": 30,
+      "supplier_name": "Cobalt Co",
+      "issue_date": "2026-01-16",
+      "create_date": "2026-01-17",
+      "required_date": "2026-02-03",
+      "sum": 900,
+      "net_sum": 900,
+      "sum_paid": 900,
+      "status": 3,
+      "currency": "USD"
+    },
+    {
+      "id": 8,
+      "invoice_number": "INV-2004",
+      "supplier_id": 30,
+      "supplier_name": "Cobalt Co",
+      "issue_date": "2026-01-23",
+      "create_date": "2026-01-24",
+      "required_date": "2026-02-10",
+      "sum": 30000,
+      "net_sum": 30000,
+      "sum_paid": 0,
+      "status": 1,
+      "currency": "USD"
+    },
+    {
+      "id": 9,
+      "invoice_number": "INV-3001",
+      "supplier_id": null,
+      "supplier_name": "Unknown Vendor",
+      "issue_date": "2026-02-01",
+      "create_date": "2026-02-01",
+      "required_date": null,
+      "sum": 500,
+      "net_sum": null,
+      "sum_paid": null,
+      "status": null,
+      "currency": null
+    }
+  ],
+  "items": [
+    {
+      "invoice_id": 5,
+      "name": "Freight",
+      "price": 100,
+      "quantity": 2,
+      "line_sum": 200,
+      "tax_percent": 20
+    },
+    {
+      "invoice_id": 6,
+      "name": "freight",
+      "price": 100,
+      "quantity": 2,
+      "line_sum": 200,
+      "tax_percent": 20
+    },
+    {
+      "invoice_id": 7,
+      "name": "FREIGHT",
+      "price": 120,
+      "quantity": 2,
+      "line_sum": 240,
+      "tax_percent": 20
+    },
+    {
+      "invoice_id": 8,
+      "name": "Freight",
+      "price": 120,
+      "quantity": 1,
+      "line_sum": 120,
+      "tax_percent": 5
+    },
+    {
+      "invoice_id": 8,
+      "name": "Expedite Surcharge",
+      "price": 750,
+      "quantity": 1,
+      "line_sum": 750,
+      "tax_percent": 20
+    },
+    {
+      "invoice_id": 8,
+      "name": "Volume Rebate",
+      "price": -1250,
+      "quantity": 1,
+      "line_sum": -1250,
+      "tax_percent": 0
+    },
+    {
+      "invoice_id": 1,
+      "name": "Handling",
+      "price": 2.675,
+      "quantity": 10,
+      "line_sum": 26.75,
+      "tax_percent": 20
+    },
+    {
+      "invoice_id": 2,
+      "name": "handling",
+      "price": 2.8,
+      "quantity": 10,
+      "line_sum": 28,
+      "tax_percent": 20
+    },
+    {
+      "invoice_id": 4,
+      "name": "Pallets",
+      "price": 45,
+      "quantity": 4,
+      "line_sum": 180,
+      "tax_percent": 20
+    },
+    {
+      "invoice_id": 10,
+      "name": "pallets",
+      "price": 45,
+      "quantity": 4,
+      "line_sum": 180,
+      "tax_percent": 0
+    }
+  ],
+  "normalize_number": {
+    "1001": "1001",
+    "INV-1001": "1001",
+    "#inv1001": "1001",
+    "NV1001": "1001",
+    "IN1001": "1001",
+    "inv 10/01": "1001",
+    "": "",
+    "INVOICE-9": "OICE9"
+  },
+  "rules": {
+    "duplicate_numbers": [
+      {
+        "rule": "duplicate_invoice_number",
+        "severity": "high",
+        "supplier_name": "Acme Metals",
+        "invoice_number": "#inv1001, INV-1001",
+        "detail": "2 invoices normalize to the same number '1001' — possible duplicate billing/payment",
+        "amount": 12500
+      }
+    ],
+    "entry_lag": [
+      {
+        "rule": "entry_lag",
+        "severity": "med",
+        "supplier_name": "Acme Metals",
+        "invoice_number": "INV-1002",
+        "detail": "Entered into Precoro 40 days after issue date 2026-01-01 — period costs understated in the interim",
+        "amount": 4000
+      }
+    ],
+    "overdue_unpaid": [
+      {
+        "rule": "overdue_unpaid",
+        "severity": "med",
+        "supplier_name": "Borax Ltd",
+        "invoice_number": "INV-1003",
+        "detail": "Approved but unpaid 28 days past 2026-02-01 — late-fee exposure accruing",
+        "amount": 8800
+      },
+      {
+        "rule": "overdue_unpaid",
+        "severity": "high",
+        "supplier_name": "Borax Ltd",
+        "invoice_number": "INV-1004",
+        "detail": "Approved but unpaid 106 days past 2025-11-15 — late-fee exposure accruing",
+        "amount": 3500
+      }
+    ],
+    "amount_outliers": [
+      {
+        "rule": "amount_outlier",
+        "severity": "med",
+        "supplier_name": "Cobalt Co",
+        "invoice_number": "INV-2004",
+        "detail": "$30,000.00 is 28.6x this vendor's median invoice ($1,050.00)",
+        "amount": 30000
+      }
+    ],
+    "rate_changes": [
+      {
+        "rule": "rate_change",
+        "severity": "high",
+        "supplier_name": "Cobalt Co",
+        "invoice_number": "INV-2003",
+        "detail": "'FREIGHT' billed at 120 vs baseline 100 (+20%) — verify amendment",
+        "amount": 240
+      },
+      {
+        "rule": "rate_change",
+        "severity": "high",
+        "supplier_name": "Cobalt Co",
+        "invoice_number": "INV-2004",
+        "detail": "'Freight' billed at 120 vs baseline 100 (+20%) — verify amendment",
+        "amount": 120
+      }
+    ],
+    "new_charge_types": [
+      {
+        "rule": "new_charge_type",
+        "severity": "med",
+        "supplier_name": "Cobalt Co",
+        "invoice_number": "INV-2004",
+        "detail": "New charge type 'Expedite Surcharge' first appears on this invoice — confirm it was contractually agreed",
+        "amount": 750
+      },
+      {
+        "rule": "new_charge_type",
+        "severity": "med",
+        "supplier_name": "Cobalt Co",
+        "invoice_number": "INV-2004",
+        "detail": "New charge type 'Volume Rebate' first appears on this invoice — confirm it was contractually agreed",
+        "amount": -1250
+      }
+    ],
+    "negative_adjustments": [
+      {
+        "rule": "unexplained_credit",
+        "severity": "low",
+        "supplier_name": "Cobalt Co",
+        "invoice_number": "INV-2004",
+        "detail": "Credit line 'Volume Rebate' of -1,250.00 — adjustments should carry a documented reason",
+        "amount": -1250
+      }
+    ],
+    "inconsistent_tax": [
+      {
+        "rule": "inconsistent_tax",
+        "severity": "med",
+        "supplier_name": "Borax Ltd",
+        "invoice_number": "INV-1003",
+        "detail": "'Pallets' taxed at 20% here but untaxed on other invoices — verify taxability",
+        "amount": 180
+      }
+    ]
+  },
+  "run_all": [
+    {
+      "rule": "duplicate_invoice_number",
+      "severity": "high",
+      "supplier_name": "Acme Metals",
+      "invoice_number": "#inv1001, INV-1001",
+      "detail": "2 invoices normalize to the same number '1001' — possible duplicate billing/payment",
+      "amount": 12500
+    },
+    {
+      "rule": "entry_lag",
+      "severity": "med",
+      "supplier_name": "Acme Metals",
+      "invoice_number": "INV-1002",
+      "detail": "Entered into Precoro 40 days after issue date 2026-01-01 — period costs understated in the interim",
+      "amount": 4000
+    },
+    {
+      "rule": "overdue_unpaid",
+      "severity": "med",
+      "supplier_name": "Borax Ltd",
+      "invoice_number": "INV-1003",
+      "detail": "Approved but unpaid 28 days past 2026-02-01 — late-fee exposure accruing",
+      "amount": 8800
+    },
+    {
+      "rule": "overdue_unpaid",
+      "severity": "high",
+      "supplier_name": "Borax Ltd",
+      "invoice_number": "INV-1004",
+      "detail": "Approved but unpaid 106 days past 2025-11-15 — late-fee exposure accruing",
+      "amount": 3500
+    },
+    {
+      "rule": "amount_outlier",
+      "severity": "med",
+      "supplier_name": "Cobalt Co",
+      "invoice_number": "INV-2004",
+      "detail": "$30,000.00 is 28.6x this vendor's median invoice ($1,050.00)",
+      "amount": 30000
+    },
+    {
+      "rule": "rate_change",
+      "severity": "high",
+      "supplier_name": "Cobalt Co",
+      "invoice_number": "INV-2003",
+      "detail": "'FREIGHT' billed at 120 vs baseline 100 (+20%) — verify amendment",
+      "amount": 240
+    },
+    {
+      "rule": "rate_change",
+      "severity": "high",
+      "supplier_name": "Cobalt Co",
+      "invoice_number": "INV-2004",
+      "detail": "'Freight' billed at 120 vs baseline 100 (+20%) — verify amendment",
+      "amount": 120
+    },
+    {
+      "rule": "new_charge_type",
+      "severity": "med",
+      "supplier_name": "Cobalt Co",
+      "invoice_number": "INV-2004",
+      "detail": "New charge type 'Expedite Surcharge' first appears on this invoice — confirm it was contractually agreed",
+      "amount": 750
+    },
+    {
+      "rule": "new_charge_type",
+      "severity": "med",
+      "supplier_name": "Cobalt Co",
+      "invoice_number": "INV-2004",
+      "detail": "New charge type 'Volume Rebate' first appears on this invoice — confirm it was contractually agreed",
+      "amount": -1250
+    },
+    {
+      "rule": "unexplained_credit",
+      "severity": "low",
+      "supplier_name": "Cobalt Co",
+      "invoice_number": "INV-2004",
+      "detail": "Credit line 'Volume Rebate' of -1,250.00 — adjustments should carry a documented reason",
+      "amount": -1250
+    },
+    {
+      "rule": "inconsistent_tax",
+      "severity": "med",
+      "supplier_name": "Borax Ltd",
+      "invoice_number": "INV-1003",
+      "detail": "'Pallets' taxed at 20% here but untaxed on other invoices — verify taxability",
+      "amount": 180
+    }
+  ]
+}

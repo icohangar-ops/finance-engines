@@ -1,0 +1,259 @@
+{
+  "spec": "Python format-string equivalence (src/internal/pyformat.ts)",
+  "note": "Python rounds half-to-even on the exact double; JS Math.round/toFixed round half-away-from-zero. These vectors pin the tie cases. fmtSignedPct output is used as an object key in sensitivity(), so a mismatch is not cosmetic.",
+  "cases": [
+    {
+      "input": 0,
+      "fixed_2": "0.00",
+      "fixed_2_grouped": "0.00",
+      "fixed_0_signed": "+0",
+      "signed_pct": "+0%",
+      "round_2": 0,
+      "g": "0"
+    },
+    {
+      "input": 0,
+      "negative_zero": true,
+      "fixed_2": "-0.00",
+      "fixed_2_grouped": "-0.00",
+      "fixed_0_signed": "-0",
+      "signed_pct": "-0%",
+      "round_2": 0,
+      "g": "-0"
+    },
+    {
+      "input": 0.1,
+      "fixed_2": "0.10",
+      "fixed_2_grouped": "0.10",
+      "fixed_0_signed": "+0",
+      "signed_pct": "+10%",
+      "round_2": 0.1,
+      "g": "0.1"
+    },
+    {
+      "input": 0.25,
+      "fixed_2": "0.25",
+      "fixed_2_grouped": "0.25",
+      "fixed_0_signed": "+0",
+      "signed_pct": "+25%",
+      "round_2": 0.25,
+      "g": "0.25"
+    },
+    {
+      "input": -0.25,
+      "fixed_2": "-0.25",
+      "fixed_2_grouped": "-0.25",
+      "fixed_0_signed": "-0",
+      "signed_pct": "-25%",
+      "round_2": -0.25,
+      "g": "-0.25"
+    },
+    {
+      "input": 0.005,
+      "fixed_2": "0.01",
+      "fixed_2_grouped": "0.01",
+      "fixed_0_signed": "+0",
+      "signed_pct": "+0%",
+      "round_2": 0.01,
+      "g": "0.005"
+    },
+    {
+      "input": -0.005,
+      "fixed_2": "-0.01",
+      "fixed_2_grouped": "-0.01",
+      "fixed_0_signed": "-0",
+      "signed_pct": "-0%",
+      "round_2": -0.01,
+      "g": "-0.005"
+    },
+    {
+      "input": 0.004,
+      "fixed_2": "0.00",
+      "fixed_2_grouped": "0.00",
+      "fixed_0_signed": "+0",
+      "signed_pct": "+0%",
+      "round_2": 0,
+      "g": "0.004"
+    },
+    {
+      "input": -0.004,
+      "fixed_2": "-0.00",
+      "fixed_2_grouped": "-0.00",
+      "fixed_0_signed": "-0",
+      "signed_pct": "-0%",
+      "round_2": 0,
+      "g": "-0.004"
+    },
+    {
+      "input": 0.045,
+      "fixed_2": "0.04",
+      "fixed_2_grouped": "0.04",
+      "fixed_0_signed": "+0",
+      "signed_pct": "+4%",
+      "round_2": 0.04,
+      "g": "0.045"
+    },
+    {
+      "input": -0.045,
+      "fixed_2": "-0.04",
+      "fixed_2_grouped": "-0.04",
+      "fixed_0_signed": "-0",
+      "signed_pct": "-4%",
+      "round_2": -0.04,
+      "g": "-0.045"
+    },
+    {
+      "input": 0.125,
+      "fixed_2": "0.12",
+      "fixed_2_grouped": "0.12",
+      "fixed_0_signed": "+0",
+      "signed_pct": "+12%",
+      "round_2": 0.12,
+      "g": "0.125"
+    },
+    {
+      "input": -0.125,
+      "fixed_2": "-0.12",
+      "fixed_2_grouped": "-0.12",
+      "fixed_0_signed": "-0",
+      "signed_pct": "-12%",
+      "round_2": -0.12,
+      "g": "-0.125"
+    },
+    {
+      "input": 0.135,
+      "fixed_2": "0.14",
+      "fixed_2_grouped": "0.14",
+      "fixed_0_signed": "+0",
+      "signed_pct": "+14%",
+      "round_2": 0.14,
+      "g": "0.135"
+    },
+    {
+      "input": 0.5,
+      "fixed_2": "0.50",
+      "fixed_2_grouped": "0.50",
+      "fixed_0_signed": "+0",
+      "signed_pct": "+50%",
+      "round_2": 0.5,
+      "g": "0.5"
+    },
+    {
+      "input": -0.5,
+      "fixed_2": "-0.50",
+      "fixed_2_grouped": "-0.50",
+      "fixed_0_signed": "-0",
+      "signed_pct": "-50%",
+      "round_2": -0.5,
+      "g": "-0.5"
+    },
+    {
+      "input": 2.5,
+      "fixed_2": "2.50",
+      "fixed_2_grouped": "2.50",
+      "fixed_0_signed": "+2",
+      "signed_pct": "+250%",
+      "round_2": 2.5,
+      "g": "2.5"
+    },
+    {
+      "input": -2.5,
+      "fixed_2": "-2.50",
+      "fixed_2_grouped": "-2.50",
+      "fixed_0_signed": "-2",
+      "signed_pct": "-250%",
+      "round_2": -2.5,
+      "g": "-2.5"
+    },
+    {
+      "input": 1.005,
+      "fixed_2": "1.00",
+      "fixed_2_grouped": "1.00",
+      "fixed_0_signed": "+1",
+      "signed_pct": "+100%",
+      "round_2": 1,
+      "g": "1.005"
+    },
+    {
+      "input": 1.115,
+      "fixed_2": "1.11",
+      "fixed_2_grouped": "1.11",
+      "fixed_0_signed": "+1",
+      "signed_pct": "+112%",
+      "round_2": 1.11,
+      "g": "1.115"
+    },
+    {
+      "input": 2.675,
+      "fixed_2": "2.67",
+      "fixed_2_grouped": "2.67",
+      "fixed_0_signed": "+3",
+      "signed_pct": "+268%",
+      "round_2": 2.67,
+      "g": "2.675"
+    },
+    {
+      "input": -2.675,
+      "fixed_2": "-2.67",
+      "fixed_2_grouped": "-2.67",
+      "fixed_0_signed": "-3",
+      "signed_pct": "-268%",
+      "round_2": -2.67,
+      "g": "-2.675"
+    },
+    {
+      "input": 1234.565,
+      "fixed_2": "1234.57",
+      "fixed_2_grouped": "1,234.57",
+      "fixed_0_signed": "+1235",
+      "signed_pct": "+123456%",
+      "round_2": 1234.57,
+      "g": "1234.57"
+    },
+    {
+      "input": 1e-7,
+      "fixed_2": "0.00",
+      "fixed_2_grouped": "0.00",
+      "fixed_0_signed": "+0",
+      "signed_pct": "+0%",
+      "round_2": 0,
+      "g": "1e-07"
+    },
+    {
+      "input": 16250.75,
+      "fixed_2": "16250.75",
+      "fixed_2_grouped": "16,250.75",
+      "fixed_0_signed": "+16251",
+      "signed_pct": "+1625075%",
+      "round_2": 16250.75,
+      "g": "16250.8"
+    },
+    {
+      "input": 33400,
+      "fixed_2": "33400.00",
+      "fixed_2_grouped": "33,400.00",
+      "fixed_0_signed": "+33400",
+      "signed_pct": "+3340000%",
+      "round_2": 33400,
+      "g": "33400"
+    },
+    {
+      "input": 14875.125,
+      "fixed_2": "14875.12",
+      "fixed_2_grouped": "14,875.12",
+      "fixed_0_signed": "+14875",
+      "signed_pct": "+1487512%",
+      "round_2": 14875.12,
+      "g": "14875.1"
+    },
+    {
+      "input": 1000000.005,
+      "fixed_2": "1000000.01",
+      "fixed_2_grouped": "1,000,000.01",
+      "fixed_0_signed": "+1000000",
+      "signed_pct": "+100000000%",
+      "round_2": 1000000.01,
+      "g": "1e+06"
+    }
+  ]
+}

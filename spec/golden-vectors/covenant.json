@@ -1,0 +1,268 @@
+{
+  "spec": "Covenant compliance engine (covtracker/engine.py <-> src/covenant/)",
+  "note": "debt_to_net_worth is Infinity when equity <= 0, encoded as the string \"Infinity\" because JSON cannot represent it.",
+  "config": {
+    "annual_debt_service": 620000,
+    "covenants": [
+      {
+        "name": "Minimum DSCR",
+        "metric": "dscr",
+        "operator": ">=",
+        "threshold": 1.25,
+        "basis": "EBITDA / annual debt service"
+      },
+      {
+        "name": "Max Debt to Net Worth",
+        "metric": "debt_to_net_worth",
+        "operator": "<=",
+        "threshold": 2,
+        "basis": "Total debt / equity"
+      },
+      {
+        "name": "Minimum Current Ratio",
+        "metric": "current_ratio",
+        "operator": ">=",
+        "threshold": 1.1,
+        "basis": "Current assets / current liabilities"
+      },
+      {
+        "name": "Minimum EBITDA",
+        "metric": "ebitda",
+        "operator": ">=",
+        "threshold": 1000000,
+        "basis": "Net income + addbacks"
+      }
+    ],
+    "account_map": {
+      "ebitda_addbacks": [
+        "depreciation",
+        "amortisation",
+        "interest"
+      ],
+      "cash": [
+        "cash"
+      ],
+      "current_assets": [
+        "cash",
+        "receivable",
+        "inventory"
+      ],
+      "current_liabilities": [
+        "payable",
+        "current portion"
+      ],
+      "total_debt": [
+        "term loan",
+        "current portion"
+      ],
+      "equity": [
+        "share capital",
+        "retained earnings"
+      ]
+    }
+  },
+  "trial_balance": {
+    "revenue": {
+      "Sales - Recycling": 4500000,
+      "Sales - Café Services": 125000.125
+    },
+    "expenses": {
+      "Cost of Sales": 2800000,
+      "Depreciation": 340000,
+      "Amortisation": 60000,
+      "Interest Expense": 180000,
+      "Wages": 620000.005
+    },
+    "assets": {
+      "Cash at Bank": 890000,
+      "Accounts Receivable": 1240000,
+      "Inventory": 760000,
+      "Plant & Equipment": 5100000
+    },
+    "liabilities": {
+      "Accounts Payable": 980000,
+      "Current Portion of Term Loan": 400000,
+      "Term Loan": 3600000
+    },
+    "equity": {
+      "Share Capital": 2000000,
+      "Retained Earnings": 450000
+    }
+  },
+  "metrics": {
+    "revenue": 4625000.125,
+    "net_income": 625000.1200000001,
+    "ebitda": 1205000.12,
+    "cash": 890000,
+    "current_ratio": 2.0942028985507246,
+    "dscr": 1.9435485806451616,
+    "debt_to_net_worth": 1.3008129573666487,
+    "total_debt": 4000000,
+    "equity": 3075000.12
+  },
+  "evaluate": [
+    {
+      "name": "Minimum DSCR",
+      "metric": "dscr",
+      "value": 1.9435485806451616,
+      "operator": ">=",
+      "threshold": 1.25,
+      "compliant": true,
+      "headroom_pct": 55.48388645161293,
+      "basis": "EBITDA / annual debt service"
+    },
+    {
+      "name": "Max Debt to Net Worth",
+      "metric": "debt_to_net_worth",
+      "value": 1.3008129573666487,
+      "operator": "<=",
+      "threshold": 2,
+      "compliant": true,
+      "headroom_pct": 34.959352131667565,
+      "basis": "Total debt / equity"
+    },
+    {
+      "name": "Minimum Current Ratio",
+      "metric": "current_ratio",
+      "value": 2.0942028985507246,
+      "operator": ">=",
+      "threshold": 1.1,
+      "compliant": true,
+      "headroom_pct": 90.3820816864295,
+      "basis": "Current assets / current liabilities"
+    },
+    {
+      "name": "Minimum EBITDA",
+      "metric": "ebitda",
+      "value": 1205000.12,
+      "operator": ">=",
+      "threshold": 1000000,
+      "compliant": true,
+      "headroom_pct": 20.500012000000012,
+      "basis": "Net income + addbacks"
+    }
+  ],
+  "insolvent": {
+    "trial_balance": {
+      "revenue": {
+        "Sales": 100000
+      },
+      "expenses": {
+        "Cost of Sales": 900000
+      },
+      "assets": {
+        "Cash at Bank": 10000
+      },
+      "liabilities": {
+        "Term Loan": 2000000
+      },
+      "equity": {
+        "Share Capital": 50000
+      }
+    },
+    "metrics": {
+      "revenue": 100000,
+      "net_income": -800000,
+      "ebitda": -800000,
+      "cash": 10000,
+      "current_ratio": 0,
+      "dscr": -1.2903225806451613,
+      "debt_to_net_worth": "Infinity",
+      "total_debt": 2000000,
+      "equity": -750000
+    },
+    "evaluate": [
+      {
+        "name": "Minimum DSCR",
+        "metric": "dscr",
+        "value": -1.2903225806451613,
+        "operator": ">=",
+        "threshold": 1.25,
+        "compliant": false,
+        "headroom_pct": -203.2258064516129,
+        "basis": "EBITDA / annual debt service"
+      },
+      {
+        "name": "Max Debt to Net Worth",
+        "metric": "debt_to_net_worth",
+        "value": "Infinity",
+        "operator": "<=",
+        "threshold": 2,
+        "compliant": false,
+        "headroom_pct": "-Infinity",
+        "basis": "Total debt / equity"
+      },
+      {
+        "name": "Minimum Current Ratio",
+        "metric": "current_ratio",
+        "value": 0,
+        "operator": ">=",
+        "threshold": 1.1,
+        "compliant": false,
+        "headroom_pct": -100,
+        "basis": "Current assets / current liabilities"
+      },
+      {
+        "name": "Minimum EBITDA",
+        "metric": "ebitda",
+        "value": -800000,
+        "operator": ">=",
+        "threshold": 1000000,
+        "compliant": false,
+        "headroom_pct": -180,
+        "basis": "Net income + addbacks"
+      }
+    ]
+  },
+  "trial_balance_from_records": {
+    "records": [
+      {
+        "account": "Sales - Recycling",
+        "section": "revenue",
+        "credit": 4500000
+      },
+      {
+        "account": "Cost of Sales",
+        "section": "expenses",
+        "debit": 2800000
+      },
+      {
+        "account": "Cash at Bank",
+        "section": "assets",
+        "debit": 890000
+      },
+      {
+        "account": "Accounts Payable",
+        "section": "liabilities",
+        "credit": 980000
+      },
+      {
+        "account": "Share Capital",
+        "section": "equity",
+        "credit": 2000000
+      },
+      {
+        "account": "Cash at Bank",
+        "section": "assets",
+        "debit": 10000
+      }
+    ],
+    "result": {
+      "revenue": {
+        "Sales - Recycling": 4500000
+      },
+      "expenses": {
+        "Cost of Sales": 2800000
+      },
+      "assets": {
+        "Cash at Bank": 900000
+      },
+      "liabilities": {
+        "Accounts Payable": 980000
+      },
+      "equity": {
+        "Share Capital": 2000000
+      }
+    }
+  }
+}

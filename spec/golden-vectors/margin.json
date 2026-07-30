@@ -1,0 +1,306 @@
+{
+  "spec": "Commodity margin engine (marginengine/engine.py <-> src/margin/)",
+  "config": {
+    "indices": {
+      "Ni": "LME-NI",
+      "Co": "LME-CO",
+      "Li": "FM-LI"
+    },
+    "products": {
+      "black-mass": {
+        "assay": {
+          "Ni": 0.22,
+          "Co": 0.05,
+          "Li": 0.035
+        },
+        "payables": {
+          "Ni": 0.7,
+          "Co": 0.7,
+          "Li": 0.4
+        }
+      },
+      "ni-sulphate": {
+        "assay": {
+          "Ni": 0.225
+        },
+        "payables": {
+          "Ni": 0.85
+        }
+      }
+    },
+    "cost_per_mt": {
+      "black-mass": 1200,
+      "ni-sulphate": 4100.5
+    },
+    "inventory_mt": {
+      "black-mass": 480,
+      "ni-sulphate": 12.5
+    },
+    "sensitivity_shocks": [
+      -0.25,
+      -0.045,
+      -0.005,
+      0.005,
+      0.045,
+      0.125,
+      0.25
+    ]
+  },
+  "prices": {
+    "LME-NI": 16250.75,
+    "LME-CO": 33400,
+    "FM-LI": 14875.125
+  },
+  "prices_csv": "date,symbol,usd_per_tonne\n2026-01-02,LME-NI,15900.5\n2026-03-14,LME-NI,16250.75\n2026-02-01,LME-CO,33400\n2026-03-14,FM-LI,14875.125\n2026-01-15,FM-LI,13000",
+  "parse_prices_csv": {
+    "LME-NI": 16250.75,
+    "LME-CO": 33400,
+    "FM-LI": 14875.125
+  },
+  "product_economics": [
+    {
+      "product": "black-mass",
+      "revenue_per_mt": 3879.86725,
+      "cost_per_mt": 1200,
+      "margin_per_mt": 2679.86725,
+      "metal_contributions": {
+        "Ni": 2502.6155,
+        "Co": 1168.9999999999998,
+        "Li": 208.25175000000004
+      },
+      "inventory_mt": 480,
+      "inventory_value": 1862336.2799999998,
+      "inventory_margin": 1286336.2799999998
+    },
+    {
+      "product": "ni-sulphate",
+      "revenue_per_mt": 3107.9559375,
+      "cost_per_mt": 4100.5,
+      "margin_per_mt": -992.5440625000001,
+      "metal_contributions": {
+        "Ni": 3107.9559375
+      },
+      "inventory_mt": 12.5,
+      "inventory_value": 38849.44921875,
+      "inventory_margin": -12406.800781250002
+    }
+  ],
+  "sensitivity": {
+    "black-mass": [
+      {
+        "scenario": "all metals",
+        "base": 2679.86725,
+        "-25%": 1709.9004375,
+        "-4%": 2505.27322375,
+        "-0%": 2660.4679137499998,
+        "+0%": 2699.2665862499994,
+        "+4%": 2854.461276249999,
+        "+12%": 3164.8506562499997,
+        "+25%": 3649.8340625
+      },
+      {
+        "scenario": "Ni",
+        "base": 2679.86725,
+        "-25%": 2054.213375,
+        "-4%": 2567.2495525,
+        "-0%": 2667.3541725,
+        "+0%": 2692.3803274999996,
+        "+4%": 2792.4849474999996,
+        "+12%": 2992.6941875,
+        "+25%": 3305.521125
+      },
+      {
+        "scenario": "Co",
+        "base": 2679.86725,
+        "-25%": 2387.61725,
+        "-4%": 2627.2622499999998,
+        "-0%": 2674.0222499999995,
+        "+0%": 2685.7122499999996,
+        "+4%": 2732.4722499999993,
+        "+12%": 2825.99225,
+        "+25%": 2972.1172500000002
+      },
+      {
+        "scenario": "Li",
+        "base": 2679.86725,
+        "-25%": 2627.8043125,
+        "-4%": 2670.49592125,
+        "-0%": 2678.82599125,
+        "+0%": 2680.90850875,
+        "+4%": 2689.2385787499998,
+        "+12%": 2705.8987187499997,
+        "+25%": 2731.9301875
+      }
+    ],
+    "ni-sulphate": [
+      {
+        "scenario": "all metals",
+        "base": -992.5440625000001,
+        "-25%": -1769.5330468749999,
+        "-4%": -1132.4020796875002,
+        "-0%": -1008.0838421875001,
+        "+0%": -977.0042828125002,
+        "+4%": -852.6860453125,
+        "+12%": -604.0495703124998,
+        "+25%": -215.5550781249999
+      },
+      {
+        "scenario": "Ni",
+        "base": -992.5440625000001,
+        "-25%": -1769.5330468749999,
+        "-4%": -1132.4020796875002,
+        "-0%": -1008.0838421875001,
+        "+0%": -977.0042828125002,
+        "+4%": -852.6860453125,
+        "+12%": -604.0495703124998,
+        "+25%": -215.5550781249999
+      }
+    ]
+  },
+  "breakeven": {
+    "black-mass": {
+      "Ni": 5026.177119848624,
+      "Co": 10330.250345549839,
+      "Li": 4600.71153207626
+    },
+    "ni-sulphate": {
+      "Ni": 21440.522875816994
+    }
+  },
+  "contracts": {
+    "bm-offtake": {
+      "spec": {
+        "type": "grade_multiplier",
+        "description": "Black mass at 85% of contained value",
+        "metals": [
+          "Ni",
+          "Co"
+        ],
+        "grade_multiplier": 0.85
+      },
+      "result": {
+        "name": "bm-offtake",
+        "type": "grade_multiplier",
+        "description": "Black mass at 85% of contained value",
+        "outputs": {
+          "Ni_payable_usd_per_mt": 13813.14,
+          "Co_payable_usd_per_mt": 28390,
+          "total_value_per_mt": 42203.14,
+          "grade_multiplier": 0.85
+        },
+        "flags": {}
+      }
+    },
+    "bm-discount": {
+      "spec": {
+        "type": "discount_profit_share",
+        "description": "12.5% discount with Ni profit share above 16,000",
+        "metals": [
+          "Ni",
+          "Co"
+        ],
+        "floor_discount": 0.125,
+        "profit_share": {
+          "metal": "Ni",
+          "threshold_usd_per_mt": 16000,
+          "share": 0.35
+        }
+      },
+      "result": {
+        "name": "bm-discount",
+        "type": "discount_profit_share",
+        "description": "12.5% discount with Ni profit share above 16,000",
+        "outputs": {
+          "floor_Ni_usd_per_mt": 14219.41,
+          "floor_Co_usd_per_mt": 29225,
+          "profit_share_amount": 87.76,
+          "realized_Ni_usd_per_mt": 14131.65
+        },
+        "flags": {
+          "profit_share_triggered": true
+        }
+      }
+    },
+    "ni-collar": {
+      "spec": {
+        "type": "collar",
+        "description": "Ni collared 15,000-16,000 (ceiling binding at spot 16,250.75)",
+        "metal": "Ni",
+        "floor_usd_per_mt": 15000,
+        "ceiling_usd_per_mt": 16000
+      },
+      "result": {
+        "name": "ni-collar",
+        "type": "collar",
+        "description": "Ni collared 15,000-16,000 (ceiling binding at spot 16,250.75)",
+        "outputs": {
+          "spot_usd_per_mt": 16250.75,
+          "effective_usd_per_mt": 16000,
+          "floor_usd_per_mt": 15000,
+          "ceiling_usd_per_mt": 16000
+        },
+        "flags": {
+          "floor_binding": false,
+          "ceiling_binding": true
+        }
+      }
+    },
+    "li-collar": {
+      "spec": {
+        "type": "collar",
+        "description": "Li collared 20,000-30,000 (floor binding at spot 14,875.125)",
+        "metal": "Li",
+        "floor_usd_per_mt": 20000,
+        "ceiling_usd_per_mt": 30000
+      },
+      "result": {
+        "name": "li-collar",
+        "type": "collar",
+        "description": "Li collared 20,000-30,000 (floor binding at spot 14,875.125)",
+        "outputs": {
+          "spot_usd_per_mt": 14875.12,
+          "effective_usd_per_mt": 20000,
+          "floor_usd_per_mt": 20000,
+          "ceiling_usd_per_mt": 30000
+        },
+        "flags": {
+          "floor_binding": true,
+          "ceiling_binding": false
+        }
+      }
+    },
+    "bm-assay": {
+      "spec": {
+        "type": "assay_payables",
+        "description": "Straight assay x payable",
+        "metals": [
+          "Ni",
+          "Co",
+          "Li"
+        ],
+        "assay": {
+          "Ni": 0.22,
+          "Co": 0.05,
+          "Li": 0.035
+        },
+        "payables": {
+          "Ni": 0.7,
+          "Co": 0.7,
+          "Li": 0.4
+        }
+      },
+      "result": {
+        "name": "bm-assay",
+        "type": "assay_payables",
+        "description": "Straight assay x payable",
+        "outputs": {
+          "Ni_value_usd_per_mt": 2502.62,
+          "Co_value_usd_per_mt": 1169,
+          "Li_value_usd_per_mt": 208.25,
+          "total_value_per_mt": 3879.87
+        },
+        "flags": {}
+      }
+    }
+  }
+}
