@@ -3,11 +3,12 @@
 
 import test from "node:test";
 import assert from "node:assert/strict";
+import { fileURLToPath } from "node:url";
 
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
-const SERVER_PATH = new URL("../dist/mcp-server.js", import.meta.url).pathname;
+const SERVER_PATH = fileURLToPath(new URL("../dist/mcp-server.js", import.meta.url));
 
 const EXPECTED_TOOLS = [
   "product_margins",
@@ -20,6 +21,7 @@ const EXPECTED_TOOLS = [
   "compliance_certificate",
   "audit_invoices",
   "normalize_invoice_number",
+  "uipath_handoff",
 ];
 
 test("MCP server lists tools and answers calls", async () => {
@@ -100,6 +102,46 @@ test("MCP server lists tools and answers calls", async () => {
       findings.map((f) => f.rule),
       ["duplicate_invoice_number"],
     );
+
+    // 5. UiPath handoff wrapper should dispatch to the same audit engine.
+    const handoff = await client.callTool({
+      name: "uipath_handoff",
+      arguments: {
+        kind: "audit_invoices",
+        source: "uipath",
+        summary: "UiPath invoice handoff",
+        invoices: [
+          {
+            id: 1,
+            invoice_number: "INV100",
+            supplier_id: 1,
+            supplier_name: "Vendor 1",
+            issue_date: "2026-01-01",
+            create_date: "2026-01-02",
+            required_date: "2026-01-01",
+            sum: 500,
+            sum_paid: 500,
+            status: 5,
+          },
+          {
+            id: 2,
+            invoice_number: "#INV100",
+            supplier_id: 1,
+            supplier_name: "Vendor 1",
+            issue_date: "2026-01-05",
+            create_date: "2026-01-06",
+            required_date: "2026-01-05",
+            sum: 500,
+            sum_paid: 500,
+            status: 5,
+          },
+        ],
+      },
+    });
+    const wrapped = JSON.parse(handoff.content[0].text);
+    assert.equal(wrapped.kind, "audit_invoices");
+    assert.equal(wrapped.source, "uipath");
+    assert.equal(wrapped.result[0].rule, "duplicate_invoice_number");
   } finally {
     await client.close();
   }

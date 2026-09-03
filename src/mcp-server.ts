@@ -178,6 +178,41 @@ const covenantConfigParam = z
       "Defaults to the bundled sample config.",
   );
 
+const uipathHandoffParam = z
+  .object({
+    kind: z
+      .enum(["audit_invoices", "compliance_certificate", "evaluate_contracts"])
+      .describe("Which deterministic engine the UiPath handoff should trigger."),
+    source: z.string().optional().describe("Optional source label from UiPath."),
+    summary: z.string().optional().describe("Optional UiPath summary to echo back."),
+    invoices: z
+      .array(z.record(z.any()))
+      .optional()
+      .describe("Invoice rows for the audit engine."),
+    items: z
+      .array(z.record(z.any()))
+      .optional()
+      .describe("Optional line-item rows for the audit engine."),
+    trial_balance: trialBalanceParam
+      .optional()
+      .describe("Trial balance sections for covenant evaluation."),
+    period: z
+      .string()
+      .optional()
+      .describe("Reporting period label for compliance certificates."),
+    config: z
+      .record(z.any())
+      .optional()
+      .describe("Optional engine config passed through from UiPath."),
+    prices: pricesParam,
+    entry_lag_days: z.number().int().optional(),
+    overdue_days: z.number().int().optional(),
+    amount_outlier_multiple: z.number().optional(),
+    rate_change_pct: z.number().optional(),
+    min_invoices_for_baseline: z.number().int().optional(),
+  })
+  .describe("Thin UiPath handoff wrapper over the deterministic engines.");
+
 function toTrialBalance(sections: Record<string, Record<string, number>>): TrialBalance {
   return {
     revenue: sections.revenue ?? {},
@@ -336,11 +371,104 @@ server.registerTool(
   async ({ number }) => textResult(normalizeInvoiceNumber(number)),
 );
 
+server.registerTool(
+  "uipath_handoff",
+  {
+    title: "UiPath handoff",
+    description:
+      "Accept a UiPath payload and route it to the matching deterministic " +
+      "engine: invoice audit, covenant certificate, or contract evaluation.",
+    inputSchema: uipathHandoffParam,
+  },
+  async ({
+    kind,
+    source,
+    summary,
+    invoices,
+    items,
+    trial_balance,
+    period,
+    config,
+    prices,
+    entry_lag_days,
+    overdue_days,
+    amount_outlier_multiple,
+    rate_change_pct,
+    min_invoices_for_baseline,
+  }) => {
+    const meta = {
+      ok: true,
+      kind,
+      source: source ?? "uipath",
+      summary,
+    };
+
+    if (kind === "audit_invoices") {
+      if (!invoices) {
+        throw new Error("UiPath audit handoff requires invoices");
+      }
+
+      const auditConfig: AuditConfig = {
+        ...(config as AuditConfig | undefined),
+        ...(entry_lag_days !== undefined ? { entry_lag_days } : {}),
+        ...(overdue_days !== undefined ? { overdue_days } : {}),
+        ...(amount_outlier_multiple !== undefined ? { amount_outlier_multiple } : {}),
+        ...(rate_change_pct !== undefined ? { rate_change_pct } : {}),
+        ...(min_invoices_for_baseline !== undefined ? { min_invoices_for_baseline } : {}),
+      };
+
+      return jsonResult({
+        ...meta,
+        result: runAllAuditRules(
+          invoices as unknown as InvoiceRow[],
+          (items ?? []) as unknown as ItemRow[],
+          auditConfig,
+        ),
+      });
+    }
+
+    if (kind === "compliance_certificate") {
+      if (!trial_balance || !period) {
+        throw new Error("UiPath covenant handoff requires trial_balance and period");
+      }
+
+      const cfg = covenantCfg(config);
+      const tb = toTrialBalance(trial_balance);
+      const metrics = computeMetrics(tb, cfg);
+      const results = evaluateCovenants(metrics, cfg);
+
+      return jsonResult({
+        ...meta,
+        result: {
+          metrics,
+          results,
+          certificate: certificateMarkdown(results, metrics, period),
+        },
+      });
+    }
+
+    const { cfg, px } = resolveMargin(config as Record<string, unknown> | undefined, prices);
+    return jsonResult({
+      ...meta,
+      result: evaluateAllContracts(cfg, px),
+    });
+  },
+);
+
 // ------------------------------------------------------------------ main ----
 
 async function main(): Promise<void> {
   await server.connect(new StdioServerTransport());
 }
+
+function shutdown(): void {
+  process.exit(0);
+}
+
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);
+process.stdin.on("end", shutdown);
+process.stdin.resume();
 
 main().catch((err) => {
   console.error(err);

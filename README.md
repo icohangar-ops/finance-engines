@@ -65,7 +65,7 @@ normalizeInvoiceNumber("#INV20481"); // -> "20481"
 The engine core has **zero runtime dependencies** (the MCP SDK is only loaded
 by the server entry point).
 
-UiPath can hand invoice rows, trial balances, or contract payloads to the same deterministic tools through the MCP server or directly into the library.
+UiPath can hand invoice rows, trial balances, or contract payloads to the same deterministic tools through the `uipath_handoff` MCP tool or directly into the library.
 
 ## Quickstart — MCP server
 
@@ -108,6 +108,7 @@ bundled sample defaults apply — supply your own to price your own book.
 | `compliance_certificate` | covenant | End-to-end signable markdown covenant certificate for a period |
 | `audit_invoices` | audit | Run all eight invoice anomaly rules over supplied invoice/item rows |
 | `normalize_invoice_number` | audit | Canonicalize an invoice number for duplicate detection |
+| `uipath_handoff` | UiPath | Route a UiPath payload to invoice audit, covenant certificate, or contract evaluation |
 
 ## Development
 
