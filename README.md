@@ -65,6 +65,8 @@ normalizeInvoiceNumber("#INV20481"); // -> "20481"
 The engine core has **zero runtime dependencies** (the MCP SDK is only loaded
 by the server entry point).
 
+UiPath can hand invoice rows, trial balances, or contract payloads to the same deterministic tools through the MCP server or directly into the library.
+
 ## Quickstart — MCP server
 
 The package ships a stdio MCP server as the `finance-engines-mcp` binary.
